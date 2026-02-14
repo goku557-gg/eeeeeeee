@@ -1,28 +1,177 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Emoji Love Animation</title>
-    <link rel="stylesheet" href="style.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Live Emoji Love Edit</title>
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+    height:100vh;
+    overflow:hidden;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    background: linear-gradient(-45deg,#ff758c,#ff7eb3,#fad0c4,#ff9a9e);
+    background-size:400% 400%;
+    animation:bgMove 15s ease infinite;
+    font-family:sans-serif;
+}
+
+@keyframes bgMove{
+    0%{background-position:0% 50%}
+    50%{background-position:100% 50%}
+    100%{background-position:0% 50%}
+}
+
+.scene{
+    position:relative;
+    width:100%;
+    height:100%;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    animation:zoom 20s ease-in-out infinite alternate;
+}
+
+@keyframes zoom{
+    from{transform:scale(1)}
+    to{transform:scale(1.08)}
+}
+
+.emoji{
+    font-size:90px;
+    position:absolute;
+    transition:all 4s ease-in-out;
+}
+
+.left{ left:10%; }
+.right{ right:10%; }
+
+.hug{
+    left:45% !important;
+    right:auto !important;
+}
+
+.kiss{
+    right:45% !important;
+    left:auto !important;
+}
+
+.particles span{
+    position:absolute;
+    font-size:28px;
+    animation:float 6s linear infinite;
+    opacity:0;
+}
+
+@keyframes float{
+    0%{transform:translateY(0) scale(0.8); opacity:0;}
+    30%{opacity:1;}
+    100%{transform:translateY(-500px) scale(1.4); opacity:0;}
+}
+
+.sparkle{
+    position:absolute;
+    width:6px;
+    height:6px;
+    border-radius:50%;
+    background:white;
+    animation:spark 3s linear infinite;
+    opacity:0;
+}
+
+@keyframes spark{
+    0%{transform:translateY(0); opacity:0;}
+    40%{opacity:1;}
+    100%{transform:translateY(-300px); opacity:0;}
+}
+
+.center-text{
+    position:absolute;
+    bottom:10%;
+    font-size:28px;
+    color:white;
+    font-weight:600;
+    opacity:0;
+    animation:fadeText 6s ease-in-out infinite;
+}
+
+@keyframes fadeText{
+    0%,100%{opacity:0;}
+    40%,60%{opacity:1;}
+}
+</style>
 </head>
+
 <body>
 
-    <div class="container">
-        <div class="emoji left">🥰</div>
-        <div class="emoji right">😍</div>
+<div class="scene">
 
-        <div class="love-text">
-            I love youuuuuuuuu sooooooooooooo muchhhhhhhhhhh 💖
-        </div>
+    <div class="emoji left" id="left">🥰</div>
+    <div class="emoji right" id="right">😍</div>
 
-        <div class="kisses">
-            <span>😘</span>
-            <span>💋</span>
-            <span>😘</span>
-            <span>💋</span>
-            <span>😘</span>
-        </div>
-    </div>
+    <div class="center-text">I love youuuuuuuuu sooooooooooooo muchhhhhhhhhhh 💖</div>
+
+    <div class="particles" id="particles"></div>
+    <div id="sparkles"></div>
+
+</div>
+
+<script>
+const left = document.getElementById("left");
+const right = document.getElementById("right");
+const particles = document.getElementById("particles");
+const sparkles = document.getElementById("sparkles");
+
+function hugSequence(){
+    left.classList.add("hug");
+    right.classList.add("kiss");
+
+    setTimeout(()=>{
+        left.classList.remove("hug");
+        right.classList.remove("kiss");
+    },8000);
+}
+
+setInterval(hugSequence,15000);
+hugSequence();
+
+// Floating kisses & hearts
+setInterval(()=>{
+    const span=document.createElement("span");
+    span.innerText=Math.random()>0.5?"😘":"💋";
+    span.style.left=Math.random()*100+"%";
+    span.style.top="60%";
+    span.style.animationDuration=(4+Math.random()*3)+"s";
+    particles.appendChild(span);
+
+    setTimeout(()=>{span.remove()},7000);
+},600);
+
+// Sparkles
+setInterval(()=>{
+    const dot=document.createElement("div");
+    dot.className="sparkle";
+    dot.style.left=Math.random()*100+"%";
+    dot.style.bottom="0px";
+    dot.style.animationDuration=(2+Math.random()*2)+"s";
+    sparkles.appendChild(dot);
+
+    setTimeout(()=>{dot.remove()},3000);
+},200);
+
+// 2 minute cinematic loop timer
+setTimeout(()=>{
+    location.reload();
+},120000);
+</script>
 
 </body>
 </html>
